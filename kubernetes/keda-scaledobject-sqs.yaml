@@ -1,0 +1,18 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: keda-consumer-sqs-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: keda-consumer-deployment
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+  - type: aws-sqs-queue
+    metadata:
+      queueURL: "your-sqs-queue-url"
+      awsRegion: "your-aws-region"
+      queueLength: "5"  # Scale up when there are more than 5 messages in the queue
+    authenticationRef:
+      name: aws-trigger-auth

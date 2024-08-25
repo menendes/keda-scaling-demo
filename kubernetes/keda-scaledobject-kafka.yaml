@@ -1,0 +1,17 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: keda-consumer-kafka-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: keda-consumer-deployment
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+  - type: kafka
+    metadata:
+      bootstrapServers: "kafka-server-1,kafka-server-2"
+      topic: "your-kafka-topic"
+      consumerGroup: "your-kafka-group-id"
+      lagThreshold: "10"  # Scale up when there is a lag of 10 messages

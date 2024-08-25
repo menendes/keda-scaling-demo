@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keda-producer-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keda-producer
+  template:
+    metadata:
+      labels:
+        app: keda-producer
+    spec:
+      containers:
+      - name: keda-producer
+        image: your-docker-repo/keda-scaling-demo:latest
+        command: ["poetry", "run", "python", "producer/producer.py"]
+        envFrom:
+        - configMapRef:
+            name: keda-config
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-secrets
+              key: access_key_id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-secrets
+              key: secret_access_key

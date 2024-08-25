@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keda-consumer-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keda-consumer
+  template:
+    metadata:
+      labels:
+        app: keda-consumer
+    spec:
+      containers:
+      - name: keda-consumer
+        image: your-docker-repo/keda-scaling-demo:latest
+        command: ["poetry", "run", "python", "consumer/consumer.py"]
+        envFrom:
+        - configMapRef:
+            name: keda-config
+        env:
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: aws-secrets
+              key: access_key_id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: aws-secrets
+              key: secret_access_key

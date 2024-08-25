@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: keda-config
+data:
+  SQS_QUEUE_URL: "your-sqs-queue-url"
+  KAFKA_TOPIC: "your-kafka-topic"
+  KAFKA_SERVERS: "kafka-server-1,kafka-server-2"
+  KAFKA_GROUP_ID: "your-kafka-group-id"
+  AWS_REGION: "your-aws-region"
