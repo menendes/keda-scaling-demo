@@ -17,6 +17,7 @@ The main purpose of this project is to showcase how KEDA can be used to scale wo
 - **CPU Usage**: Scale up/down based on CPU load to handle intensive processing tasks.
 
 ## Project Structure
+```
 keda_scaling_demo/
 ├── consumer/
 │   └── consumer.py                       # Script to consume data from SQS or Kafka
@@ -35,7 +36,7 @@ keda_scaling_demo/
 ├── poetry.lock                           # Poetry lock file for reproducible builds
 ├── pyproject.toml                        # Poetry configuration file for managing dependencies
 └── README.md                             # Project documentation
-
+```
 
 
 
