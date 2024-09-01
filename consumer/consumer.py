@@ -38,17 +38,24 @@ def consume_from_sqs():
 def consume_from_kafka():
     kafka_topic = os.getenv('KAFKA_TOPIC')
     kafka_servers = os.getenv('KAFKA_SERVERS').split(',')
-    
-    consumer = KafkaConsumer(
-        kafka_topic,
-        bootstrap_servers=kafka_servers,
-        auto_offset_reset='earliest',
-        enable_auto_commit=True,
-        group_id=os.getenv('KAFKA_GROUP_ID')
-    )
-    
-    for message in consumer:
-        logging.info(f"Received Kafka message: {message.value.decode('utf-8')}")
+
+    try:
+        consumer = KafkaConsumer(
+            kafka_topic,
+            bootstrap_servers=kafka_servers,
+            auto_offset_reset='earliest',  # Uncomment if you want to start from the earliest offset
+            enable_auto_commit=True,  # Uncomment if you want to enable auto commit
+            group_id=os.getenv('KAFKA_GROUP_ID'),  # Uncomment if you need a specific group ID
+            api_version=(0, 11, 5),  # Ensure this matches your Kafka cluster version
+        )
+
+        for message in consumer:
+            logging.info("%s:%d:%d: key=%s value=%s" % (message.topic, message.partition,
+                                                 message.offset, message.key,
+                                                 message.value))
+
+    except Exception as e:
+        logging.error(f"Failed to consume messages from Kafka: {str(e)}")
 
 # Part 3: CPU-intensive function for load testing
 def cpu_load_test():

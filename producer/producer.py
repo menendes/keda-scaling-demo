@@ -15,14 +15,14 @@ def produce_to_sqs():
     )
     queue_url = os.getenv('SQS_QUEUE_URL')
 
-    for _ in range(10):  # Produce 10 messages
+    while True:
         message = {"id": random.randint(1, 100), "value": random.random()}
         response = sqs.send_message(
             QueueUrl=queue_url,
             MessageBody=json.dumps(message)
         )
         print(f"Sent SQS message: {message}")
-        time.sleep(1)
+        time.sleep(600)  # Wait for 10 minutes (600 seconds)
 
 # Produce random data to Kafka
 def produce_to_kafka():
@@ -31,16 +31,25 @@ def produce_to_kafka():
 
     producer = KafkaProducer(
         bootstrap_servers=kafka_servers,
-        value_serializer=lambda v: json.dumps(v).encode('utf-8')
+        value_serializer=lambda v: json.dumps(v).encode('utf-8'),
+        api_version=(0, 11, 5),
     )
-
-    for _ in range(10):  # Produce 10 messages
+    print(producer.config['api_version'])
+    while True:
         message = {"id": random.randint(1, 100), "value": random.random()}
         producer.send(kafka_topic, message)
         print(f"Sent Kafka message: {message}")
-        time.sleep(1)
+        time.sleep(2)  # Wait for 10 minutes (600 seconds)
 
-# Main function to run the producer
+# Main function to run the producer based on RUN_TYPE
 if __name__ == "__main__":
-    produce_to_sqs()
-    produce_to_kafka()
+    run_type = os.getenv('RUN_TYPE')
+    
+    if run_type == 'sqs':
+        print("Starting SQS producer")
+        produce_to_sqs()
+    elif run_type == 'kafka':
+        print("Starting Kafka producer")
+        produce_to_kafka()
+    else:
+        print("Invalid RUN_TYPE. Must be 'sqs' or 'kafka'.")
