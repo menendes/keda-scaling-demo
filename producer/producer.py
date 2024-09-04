@@ -4,6 +4,11 @@ from kafka import KafkaProducer
 import json
 import random
 import time
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 # Produce random data to SQS
 def produce_to_sqs():
@@ -21,8 +26,9 @@ def produce_to_sqs():
             QueueUrl=queue_url,
             MessageBody=json.dumps(message)
         )
-        print(f"Sent SQS message: {message}")
+        logging.info(f"Sent SQS message: {message}")
         time.sleep(600)  # Wait for 10 minutes (600 seconds)
+
 
 # Produce random data to Kafka
 def produce_to_kafka():
@@ -34,22 +40,24 @@ def produce_to_kafka():
         value_serializer=lambda v: json.dumps(v).encode('utf-8'),
         api_version=(0, 11, 5),
     )
-    print(producer.config['api_version'])
+    logging.info(f"Kafka producer API version: {producer.config['api_version']}")
+
     while True:
         message = {"id": random.randint(1, 100), "value": random.random()}
         producer.send(kafka_topic, message)
-        print(f"Sent Kafka message: {message}")
+        logging.info(f"Sent Kafka message: {message}")
         time.sleep(2)  # Wait for 10 minutes (600 seconds)
+
 
 # Main function to run the producer based on RUN_TYPE
 if __name__ == "__main__":
     run_type = os.getenv('RUN_TYPE')
-    
+
     if run_type == 'sqs':
-        print("Starting SQS producer")
+        logging.info("Starting SQS producer")
         produce_to_sqs()
     elif run_type == 'kafka':
-        print("Starting Kafka producer")
+        logging.info("Starting Kafka producer")
         produce_to_kafka()
     else:
-        print("Invalid RUN_TYPE. Must be 'sqs' or 'kafka'.")
+        logging.error("Invalid RUN_TYPE. Must be 'sqs' or 'kafka'.")
