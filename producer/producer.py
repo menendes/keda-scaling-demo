@@ -26,8 +26,7 @@ def produce_to_sqs():
             QueueUrl=queue_url,
             MessageBody=json.dumps(message)
         )
-        logging.info(f"Sent SQS message: {message}")
-        time.sleep(600)  # Wait for 10 minutes (600 seconds)
+        logging.info(f"Sent SQS message: {message}") # Wait for 10 minutes (600 seconds)
 
 
 # Produce random data to Kafka

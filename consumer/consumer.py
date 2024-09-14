@@ -1,6 +1,5 @@
 import os
 import boto3
-import json
 from kafka import KafkaConsumer
 import logging
 import time
@@ -22,8 +21,8 @@ def consume_from_sqs():
     while True:
         response = sqs.receive_message(
             QueueUrl=queue_url,
-            MaxNumberOfMessages=10,
-            WaitTimeSeconds=10
+            MaxNumberOfMessages=2,
+            WaitTimeSeconds=5
         )
         
         messages = response.get('Messages', [])
@@ -71,7 +70,7 @@ def cpu_load_test():
         processes.append(p)
     
     # Let the processes run for a specified time
-    time_to_run = int(os.getenv('CPU_LOAD_DURATION', '60'))
+    time_to_run = int(os.getenv('CPU_LOAD_DURATION', '300'))
     time.sleep(time_to_run)
     
     # Terminate the processes after the specified time

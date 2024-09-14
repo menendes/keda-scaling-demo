@@ -30,3 +30,8 @@ spec:
             secretKeyRef:
               name: aws-secrets
               key: secret_access_key
+        resources:
+          requests:
+            cpu: "100m"   # Define CPU request (minimum CPU needed to run)
+          limits:
+            cpu: "500m"   # Define CPU limit (maximum CPU allowed)

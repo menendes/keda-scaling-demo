@@ -8,3 +8,4 @@ data:
   KAFKA_SERVERS: "kafka-server-1,kafka-server-2"
   KAFKA_GROUP_ID: "your-kafka-group-id"
   AWS_REGION: "your-aws-region"
+  RUN_TYPE: "sqs"
